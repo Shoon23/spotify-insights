@@ -1,23 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import generateRandomString from "@/utils/generateRandomString";
 
-const getAuthUrl = () => {
-  const state = generateRandomString(16);
-  const scope = "user-read-private user-read-email";
-  const params = new URLSearchParams();
-
-  params.append("response_type", "code");
-  params.append("client_id", process.env.SPOTIFY_CLIENT_ID as string);
-  params.append("scope", scope);
-  params.append("redirect_uri", process.env.SPOTIFY_REDIRECT_URI as string);
-  params.append("state", state);
-
-  const spotifyAuthUrl = `https://accounts.spotify.com/authorize?${params.toString()}`;
-
-  return spotifyAuthUrl;
-};
-// get auth tokens for spotify
 const getToken = async (code: string) => {
   let body = new URLSearchParams({
     grant_type: "authorization_code",
@@ -41,13 +24,21 @@ const getToken = async (code: string) => {
     console.error(error);
   }
 };
-export default function Home() {
+
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const a = await getToken(searchParams?.code as string);
+
+  console.log(a);
   return (
     <main>
       <div className="">
         <h1>Login with Spotify</h1>
-        <Button variant="outline" className="bg-emerald-600 text-white" asChild>
-          <Link href={getAuthUrl()}>Login</Link>
+        <Button variant="outline" className="bg-emerald-600 text-white">
+          spotifyyy
         </Button>
       </div>
     </main>
