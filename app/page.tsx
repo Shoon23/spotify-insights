@@ -25,17 +25,19 @@ const getToken = async (code: string) => {
   }
 };
 
-export default function Home({
+export default async function Home({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
+  const tokens = await getToken(searchParams.code as string);
+
   return (
     <main>
       <div className="grid grid-cols-5 px-2">
         <Sidebar className="col-span-1" />
         <section className="col-span-4">
-          <TopListening />
+          <TopListening accessToken={tokens.access_token} />
         </section>
       </div>
     </main>
