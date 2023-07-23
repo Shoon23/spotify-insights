@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Sidebar } from "@/components/Sidebar";
+import { TopListening } from "@/components/TopListening/TopListening";
 
 const getToken = async (code: string) => {
   let body = new URLSearchParams({
@@ -25,21 +25,18 @@ const getToken = async (code: string) => {
   }
 };
 
-export default async function Home({
+export default function Home({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const a = await getToken(searchParams?.code as string);
-
-  console.log(a);
   return (
     <main>
-      <div className="">
-        <h1>Login with Spotify</h1>
-        <Button variant="outline" className="bg-emerald-600 text-white">
-          spotifyyy
-        </Button>
+      <div className="grid grid-cols-5 px-2">
+        <Sidebar className="col-span-1" />
+        <section className="col-span-4">
+          <TopListening />
+        </section>
       </div>
     </main>
   );

@@ -2,7 +2,7 @@ import generateRandomString from "./generateRandomString";
 
 export default function getAuthUrl() {
   const state = generateRandomString(16);
-  const scope = "user-read-private user-read-email";
+  const scope = "user-read-private user-read-email user-top-read";
   const params = new URLSearchParams();
 
   params.append("response_type", "code");
