@@ -4,7 +4,9 @@ import { FilterMenu } from "./FilterMenu";
 import { Week } from "../FilterOptions/Week";
 import { Months } from "../FilterOptions/Months";
 import { Year } from "../FilterOptions/Year";
-
+import Image from "next/image";
+import { ArtistCard } from "./ArtistCard";
+import { Button } from "../ui/button";
 const getTopArtistWeeks = async (accessToken: string) => {
   try {
     const res = await fetch(
@@ -64,9 +66,22 @@ export const TopArtists = async ({ accessToken }: TopArtistsProps) => {
     <TabsContent value="artists">
       <Tabs defaultValue="weeks">
         <FilterMenu />
-        <Week getWeeks={getTopArtistWeeks} accessToken={accessToken} />
-        <Months />
-        <Year />
+
+        <Week
+          getWeeks={getTopArtistWeeks}
+          accessToken={accessToken}
+          CardComponent={ArtistCard}
+        />
+        <Months
+          getMonths={getTopArtistMonths}
+          accessToken={accessToken}
+          CardComponent={ArtistCard}
+        />
+        <Year
+          getYear={getTopArtistYears}
+          accessToken={accessToken}
+          CardComponent={ArtistCard}
+        />
       </Tabs>
     </TabsContent>
   );
