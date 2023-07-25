@@ -1,7 +1,7 @@
 import React from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import { ScrollArea } from "../ui/scroll-area";
-import { useArtistsStore } from "@/artistsStore";
+import { useGenresStore } from "@/store/genresStore";
 import getSortedGenreCount from "@/utils/getSortedGenreCount";
 interface YearProps {
   getYear?: (accessToken: string) => Promise<any>;
@@ -24,7 +24,7 @@ export const Year = async ({
   if (isArtist) {
     const sortedGenreCount = getSortedGenreCount(yearData);
 
-    useArtistsStore.setState({ topGenresYears: sortedGenreCount });
+    useGenresStore.setState({ topGenresYears: sortedGenreCount });
   }
   return (
     <TabsContent value="years">

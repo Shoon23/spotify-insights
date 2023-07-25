@@ -2,7 +2,7 @@ import React from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import { ScrollArea } from "../ui/scroll-area";
 import getSortedGenreCount from "@/utils/getSortedGenreCount";
-import { useArtistsStore } from "@/artistsStore";
+import { useGenresStore } from "@/store/genresStore";
 
 interface MonthsProps {
   getMonths?: (accessToken: string) => Promise<any>;
@@ -26,7 +26,7 @@ export const Months = async ({
 
   if (isArtist) {
     const sortedGenreCount = getSortedGenreCount(monthsData);
-    useArtistsStore.setState({ topGenresMonths: sortedGenreCount });
+    useGenresStore.setState({ topGenresMonths: sortedGenreCount });
   }
 
   return (

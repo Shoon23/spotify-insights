@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs, TabsContent } from "../ui/tabs";
-import { useArtistsStore } from "@/artistsStore";
+import { useGenresStore } from "@/store/genresStore";
 import { FilterMenu } from "./FilterMenu";
 import { Progress } from "@/components/ui/progress";
 import { GenreCard } from "./GenreCard";
@@ -9,9 +9,9 @@ import { Months } from "../FilterOptions/Months";
 import { Year } from "../FilterOptions/Year";
 
 export const TopGenre = () => {
-  const topGenreWeeks = useArtistsStore.getState().topGenresWeeks;
-  const topGenresMonths = useArtistsStore.getState().topGenresMonths;
-  const topGenresYears = useArtistsStore.getState().topGenresYears;
+  const topGenreWeeks = useGenresStore.getState().topGenresWeeks;
+  const topGenresMonths = useGenresStore.getState().topGenresMonths;
+  const topGenresYears = useGenresStore.getState().topGenresYears;
 
   return (
     <TabsContent value="genre">

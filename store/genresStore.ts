@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface TopArtistState {
+interface TopGenresState {
   topGenresYears: {
     [key: string]: {
       count: number;
@@ -21,7 +21,7 @@ interface TopArtistState {
   };
 }
 
-export const useArtistsStore = create<TopArtistState>()((set) => ({
+export const useGenresStore = create<TopGenresState>()((set) => ({
   topGenresYears: {},
   topGenresWeeks: {},
   topGenresMonths: {},

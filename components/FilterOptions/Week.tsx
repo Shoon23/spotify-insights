@@ -4,7 +4,7 @@ import { MusicCard } from "../TopListening/MusicCard";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NextPage } from "next";
 import getSortedGenreCount from "@/utils/getSortedGenreCount";
-import { useArtistsStore } from "@/artistsStore";
+import { useGenresStore } from "@/store/genresStore";
 
 interface WeekProps {
   getWeeks?: (accessToken: string) => Promise<any>;
@@ -23,15 +23,10 @@ export const Week = async ({
   let weekData;
   if (getWeeks) {
     weekData = await getWeeks(accessToken);
-  } else if (genreList) {
-    const a = Object.entries(genreList);
-
-    console.log(a);
   }
-
   if (isArtist) {
     const sortedGenreCount = getSortedGenreCount(weekData);
-    useArtistsStore.setState({ topGenresWeeks: sortedGenreCount });
+    useGenresStore.setState({ topGenresWeeks: sortedGenreCount });
   }
   return (
     <TabsContent value="weeks" className="p-2 rounded-lg bg-muted">
