@@ -5,13 +5,13 @@ import Image from "next/image";
 
 interface ArtistCardProps {
   data: any;
-  number: number;
+  rank: number;
 }
-export const ArtistCard = ({ data, number }: ArtistCardProps) => {
+export const ArtistCard = ({ data, rank }: ArtistCardProps) => {
   return (
     <div className="mb-2 flex items-center  rounded-lg  bg-background p-2 justify-between px-4">
       <div className="flex  gap-4 items-center">
-        <h1 className="font-semibold">{number}</h1>
+        <h1 className="font-semibold">{rank}</h1>
         <Image
           className="rounded-md"
           height={150}

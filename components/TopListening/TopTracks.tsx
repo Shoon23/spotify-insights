@@ -76,7 +76,7 @@ export const TopTracks = ({ accessToken }: TopTracksProps) => {
               height={25}
               className="mr-1"
               src={spotifyIcon}
-              alt="Vercel Logo"
+              alt="Spotify Logo"
             />{" "}
             Create Playlist
           </Button>

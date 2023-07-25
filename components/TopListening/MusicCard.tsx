@@ -5,13 +5,13 @@ import Link from "next/link";
 
 interface MusicCardProps {
   data: any;
-  number: number;
+  rank: number;
 }
-export const MusicCard = ({ data, number }: MusicCardProps) => {
+export const MusicCard = ({ data, rank }: MusicCardProps) => {
   return (
     <div className="mb-2 grid grid-cols-6 items-center  rounded-lg  bg-background p-2 justify-between px-4">
       <div className="flex col-span-3 gap-4 items-center">
-        <h1 className="font-semibold">{number}</h1>
+        <h1 className="font-semibold">{rank}</h1>
         <Image
           className="rounded-md"
           height={150}

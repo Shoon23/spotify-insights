@@ -5,6 +5,7 @@ import { ChevronRight, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TopArtists } from "./TopArtists";
 import { TopTracks } from "./TopTracks";
+import { TopGenre } from "./TopGenre";
 
 interface TopListeningProps {
   accessToken: string;
@@ -16,6 +17,7 @@ export const TopListening = ({ accessToken }: TopListeningProps) => {
         <MenuBar />
         <TopArtists accessToken={accessToken} />
         <TopTracks accessToken={accessToken} />
+        <TopGenre />
       </Tabs>
     </>
   );

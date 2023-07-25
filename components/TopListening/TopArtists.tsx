@@ -66,18 +66,20 @@ export const TopArtists = async ({ accessToken }: TopArtistsProps) => {
     <TabsContent value="artists">
       <Tabs defaultValue="weeks">
         <FilterMenu />
-
         <Week
+          isArtist={true}
           getWeeks={getTopArtistWeeks}
           accessToken={accessToken}
           CardComponent={ArtistCard}
         />
         <Months
+          isArtist={true}
           getMonths={getTopArtistMonths}
           accessToken={accessToken}
           CardComponent={ArtistCard}
         />
         <Year
+          isArtist={true}
           getYear={getTopArtistYears}
           accessToken={accessToken}
           CardComponent={ArtistCard}
