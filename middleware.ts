@@ -8,9 +8,9 @@ import { setCookie } from "cookies-next";
 export async function middleware(request: NextRequest) {
   const code = request.nextUrl.searchParams.get("code");
 
-  if (!code) {
-    return NextResponse.redirect(new URL(getAuthUrl()));
-  }
+  // if (!code) {
+  //   return NextResponse.redirect(new URL(getAuthUrl()));
+  // }
 }
 
 // See "Matching Paths" below to learn more

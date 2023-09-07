@@ -22,7 +22,8 @@ export default function RootLayout({
         <Header />
         <main className="grid grid-cols-5 px-2">
           <Sidebar className="col-span-1" />
-          <AuthProvider>{children}</AuthProvider>
+          {children}
+          {/* <AuthProvider></AuthProvider> */}
         </main>
       </body>
     </html>
