@@ -2,7 +2,7 @@
 import { useSearchParams } from "next/navigation";
 
 import React, { useEffect } from "react";
-import { getCookie } from "cookies-next";
+
 import { useAuthStore } from "@/store/authStore";
 
 const getToken = async (code: string) => {
@@ -29,13 +29,8 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const refreshToken = "";
-
-  const a = JSON.parse(
-    `{"refreshToken":${localStorage?.getItem("refreshToken")?.toString()}}`
-  );
-
-  console.log(a);
+  const refreshToken = localStorage.getItem("refreshToken");
+  console.log(refreshToken);
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
   console.log(refreshToken);

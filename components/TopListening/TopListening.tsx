@@ -16,8 +16,8 @@ export const TopListening = ({ accessToken }: TopListeningProps) => {
       <Tabs defaultValue="artists">
         <MenuBar />
         <TopArtists accessToken={accessToken} />
-        {/* <TopTracks accessToken={accessToken} />
-        <TopGenre /> */}
+        <TopTracks accessToken={accessToken} />
+        <TopGenre />
       </Tabs>
     </>
   );

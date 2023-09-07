@@ -17,19 +17,32 @@ export function Sidebar({ className }: SidebarProps) {
         <div className="px-3 py-2">
           <div className="space-y-1">
             <Link href={"/"}>
-              <Button variant={"secondary"} className="w-full justify-start">
+              <Button
+                variant={pathname === "/" ? "secondary" : "ghost"}
+                className="w-full justify-start"
+              >
                 Top Listening
               </Button>
             </Link>
             <Link href={"/convert-playlist"}>
-              <Button variant="ghost" className="w-full justify-start">
+              <Button
+                variant={
+                  pathname === "/convert-playlist" ? "secondary" : "ghost"
+                }
+                className="w-full justify-start"
+              >
                 Spotify to Youtube
               </Button>
             </Link>
 
-            <Button variant="ghost" className="w-full justify-start">
+            {/* <Button
+              variant={
+                navigationOptions.includes(pathname) ? "ghost" : "secondary"
+              }
+              className="w-full justify-start"
+            >
               Download Youtube Playlist
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>

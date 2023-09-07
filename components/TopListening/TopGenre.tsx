@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Tabs, TabsContent } from "../ui/tabs";
 import { useGenresStore } from "@/store/genresStore";

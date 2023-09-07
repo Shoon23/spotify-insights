@@ -1,46 +1,36 @@
-import { TopListening } from "@/components/TopListening/TopListening";
-import getAuthUrl from "@/utils/getAuthUrl";
-import Link from "next/link";
-import axios from "axios";
-import { useAuthStore } from "@/store/authStore";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MenuBar } from "@/components/TopListening/MenuBar";
-const getToken = async (code: string) => {
-  try {
-    const res = await fetch("http://localhost:3000/api/auth?code=" + code, {
-      method: "GET",
-      cache: "no-store",
-    });
+"use client";
 
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
+import { useLayoutEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  // const tokens = await getToken(searchParams.code as string);
+export default function page() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  useLayoutEffect(() => {
+    const getToken = async (code: string) => {
+      try {
+        const res = await fetch("http://localhost:3000/api/auth?code=" + code, {
+          method: "GET",
 
-  return (
-    <section className="col-span-4">
-      <Tabs defaultValue="artists">
-        <TabsList className="flex">
-          <TabsTrigger className="w-full" value="artists">
-            Artists
-          </TabsTrigger>
-          <TabsTrigger className="w-full" value="tracks">
-            Tracks
-          </TabsTrigger>
-          <TabsTrigger className="w-full" value="genre">
-            Genre
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
-    </section>
-  );
+          cache: "no-store",
+        });
+
+        const data = await res.json();
+        //   useAuthStore.setState({
+        //     expiresIn: data.expires_in,
+        //     accessToken: data.access_token,
+        //   });
+        //   localStorage.setItem("refreshToken", data.refresh_token);
+        console.log(data);
+        router.push(`/top-artists?access_token${data.access_token}`);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    // getToken(searchParams.get("code") as string);
+
+    router.push(`/top-artists`);
+  }, []);
+  return null;
 }
