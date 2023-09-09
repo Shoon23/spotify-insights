@@ -23,7 +23,7 @@ export default function page() {
         //   });
         //   localStorage.setItem("refreshToken", data.refresh_token);
         console.log(data);
-        router.push(`/top-artists?access_token${data.access_token}`);
+        // router.push(`/top-artists?access_token${data.access_token}`);
       } catch (error) {
         console.log(error);
       }

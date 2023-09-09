@@ -8,7 +8,6 @@ import { usePathname, useSearchParams } from "next/navigation";
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function Sidebar({ className }: SidebarProps) {
-  const navigationOptions = ["/", "/convert-playlist", ""];
   const pathname = usePathname();
 
   return (

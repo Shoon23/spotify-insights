@@ -3,6 +3,9 @@ import { GenreCard } from "@/components/TopListening/GenreCard";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MusicCard } from "@/components/TopListening/MusicCard";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import spotifyIcon from "@/public/icons-spotify.svg";
 const getTopTracksWeeks = async (accessToken: string) => {
   try {
     const res = await fetch(
@@ -56,25 +59,35 @@ const getTopTracksYears = async (accessToken: string) => {
 };
 export default async function TopTracksPage() {
   const topTracksWeeks = await getTopTracksWeeks(
-    "BQCPoBEYnE5_C6J98MYJPEgo-K_wkvlytp69Qe0Z3vYP6ZIRh21z3hO367Zf5j3qo7yfqiaWVvxvFVOBoTzdT85Wsr2cB2Qbn8mI56dAwCzhdOc1x1SPgRXLzi71_LgpNogwZkeTribYCziyGie-hVGtPWftq4tsU_1J_aPmBdHG53CCQbJiyGDHTl1ZsN7w-Li9VdLbXN6qD98dyn8W9sU"
+    "BQABtqB1ggsCxj6WChRIcRWonxXimV4qwnNzLjsnytDUxee_ZZX6H8c1K90Dzb8EXnE-aSNui0Z9SxIivjVXEQDhphWrVEKCeZ2jHzYq_wZJNRyA9cArnz9ubSxERLIC6NXi9qbJSFhFOhYP12G2YoozZlrFEndLiQ3q8Nlx5cRO9CBKFlPYeStSj2P2BiV0EwARUIKrB7mtZ2QrizYE9Po"
   );
   const topTracksMonths = await getTopTracksMonths(
-    "BQCPoBEYnE5_C6J98MYJPEgo-K_wkvlytp69Qe0Z3vYP6ZIRh21z3hO367Zf5j3qo7yfqiaWVvxvFVOBoTzdT85Wsr2cB2Qbn8mI56dAwCzhdOc1x1SPgRXLzi71_LgpNogwZkeTribYCziyGie-hVGtPWftq4tsU_1J_aPmBdHG53CCQbJiyGDHTl1ZsN7w-Li9VdLbXN6qD98dyn8W9sU"
+    "BQABtqB1ggsCxj6WChRIcRWonxXimV4qwnNzLjsnytDUxee_ZZX6H8c1K90Dzb8EXnE-aSNui0Z9SxIivjVXEQDhphWrVEKCeZ2jHzYq_wZJNRyA9cArnz9ubSxERLIC6NXi9qbJSFhFOhYP12G2YoozZlrFEndLiQ3q8Nlx5cRO9CBKFlPYeStSj2P2BiV0EwARUIKrB7mtZ2QrizYE9Po"
   );
   const topTracksYears = await getTopTracksYears(
-    "BQCPoBEYnE5_C6J98MYJPEgo-K_wkvlytp69Qe0Z3vYP6ZIRh21z3hO367Zf5j3qo7yfqiaWVvxvFVOBoTzdT85Wsr2cB2Qbn8mI56dAwCzhdOc1x1SPgRXLzi71_LgpNogwZkeTribYCziyGie-hVGtPWftq4tsU_1J_aPmBdHG53CCQbJiyGDHTl1ZsN7w-Li9VdLbXN6qD98dyn8W9sU"
+    "BQABtqB1ggsCxj6WChRIcRWonxXimV4qwnNzLjsnytDUxee_ZZX6H8c1K90Dzb8EXnE-aSNui0Z9SxIivjVXEQDhphWrVEKCeZ2jHzYq_wZJNRyA9cArnz9ubSxERLIC6NXi9qbJSFhFOhYP12G2YoozZlrFEndLiQ3q8Nlx5cRO9CBKFlPYeStSj2P2BiV0EwARUIKrB7mtZ2QrizYE9Po"
   );
 
   return (
     <Tabs className="mb-2" defaultValue="weeks">
-      <TabsList>
-        <TabsTrigger value="weeks">Last 4 weeks</TabsTrigger>
+      <div className="flex justify-between">
+        <TabsList>
+          <TabsTrigger value="weeks">Last 4 weeks</TabsTrigger>
+          <TabsTrigger value="months">Last 6 months</TabsTrigger>
+          <TabsTrigger value="years">All time</TabsTrigger>
+        </TabsList>
 
-        <TabsTrigger value="months">Last 6 months</TabsTrigger>
-
-        <TabsTrigger value="years">All time</TabsTrigger>
-      </TabsList>
-
+        <Button>
+          <Image
+            width={25}
+            height={25}
+            className="mr-1"
+            src={spotifyIcon}
+            alt="Spotify Logo"
+          />{" "}
+          Create Playlist
+        </Button>
+      </div>
       <TabsContent value="weeks" className="p-2 rounded-lg bg-muted">
         <ScrollArea className="h-[70vh]">
           {topTracksWeeks.items.map((data: any, idx: number) => {

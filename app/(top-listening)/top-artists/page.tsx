@@ -4,6 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import { ArtistCard } from "@/components/TopListening/ArtistCard";
+import { useGenresStore } from "@/store/genresStore";
+import getSortedGenreCount from "@/utils/getSortedGenreCount";
 const getTopArtistWeeks = async (accessToken: string) => {
   try {
     const res = await fetch(
@@ -61,14 +63,23 @@ export default async function TopArtistsPage({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const topArtistWeeks = await getTopArtistWeeks(
-    "BQCPoBEYnE5_C6J98MYJPEgo-K_wkvlytp69Qe0Z3vYP6ZIRh21z3hO367Zf5j3qo7yfqiaWVvxvFVOBoTzdT85Wsr2cB2Qbn8mI56dAwCzhdOc1x1SPgRXLzi71_LgpNogwZkeTribYCziyGie-hVGtPWftq4tsU_1J_aPmBdHG53CCQbJiyGDHTl1ZsN7w-Li9VdLbXN6qD98dyn8W9sU"
+    "BQABtqB1ggsCxj6WChRIcRWonxXimV4qwnNzLjsnytDUxee_ZZX6H8c1K90Dzb8EXnE-aSNui0Z9SxIivjVXEQDhphWrVEKCeZ2jHzYq_wZJNRyA9cArnz9ubSxERLIC6NXi9qbJSFhFOhYP12G2YoozZlrFEndLiQ3q8Nlx5cRO9CBKFlPYeStSj2P2BiV0EwARUIKrB7mtZ2QrizYE9Po"
   );
   const topArtistMonths = await getTopArtistMonths(
-    "BQCPoBEYnE5_C6J98MYJPEgo-K_wkvlytp69Qe0Z3vYP6ZIRh21z3hO367Zf5j3qo7yfqiaWVvxvFVOBoTzdT85Wsr2cB2Qbn8mI56dAwCzhdOc1x1SPgRXLzi71_LgpNogwZkeTribYCziyGie-hVGtPWftq4tsU_1J_aPmBdHG53CCQbJiyGDHTl1ZsN7w-Li9VdLbXN6qD98dyn8W9sU"
+    "BQABtqB1ggsCxj6WChRIcRWonxXimV4qwnNzLjsnytDUxee_ZZX6H8c1K90Dzb8EXnE-aSNui0Z9SxIivjVXEQDhphWrVEKCeZ2jHzYq_wZJNRyA9cArnz9ubSxERLIC6NXi9qbJSFhFOhYP12G2YoozZlrFEndLiQ3q8Nlx5cRO9CBKFlPYeStSj2P2BiV0EwARUIKrB7mtZ2QrizYE9Po"
   );
   const topArtistYears = await getTopArtistYears(
-    "BQCPoBEYnE5_C6J98MYJPEgo-K_wkvlytp69Qe0Z3vYP6ZIRh21z3hO367Zf5j3qo7yfqiaWVvxvFVOBoTzdT85Wsr2cB2Qbn8mI56dAwCzhdOc1x1SPgRXLzi71_LgpNogwZkeTribYCziyGie-hVGtPWftq4tsU_1J_aPmBdHG53CCQbJiyGDHTl1ZsN7w-Li9VdLbXN6qD98dyn8W9sU"
+    "BQABtqB1ggsCxj6WChRIcRWonxXimV4qwnNzLjsnytDUxee_ZZX6H8c1K90Dzb8EXnE-aSNui0Z9SxIivjVXEQDhphWrVEKCeZ2jHzYq_wZJNRyA9cArnz9ubSxERLIC6NXi9qbJSFhFOhYP12G2YoozZlrFEndLiQ3q8Nlx5cRO9CBKFlPYeStSj2P2BiV0EwARUIKrB7mtZ2QrizYE9Po"
   );
+  const sortedWeeksGenre = getSortedGenreCount(topArtistWeeks);
+  const sortedMonthsGenre = getSortedGenreCount(topArtistMonths);
+  const sortedYearsGenre = getSortedGenreCount(topArtistYears);
+
+  useGenresStore.setState({
+    topGenresWeeks: sortedWeeksGenre,
+    topGenresMonths: sortedMonthsGenre,
+    topGenresYears: sortedYearsGenre,
+  });
 
   return (
     <Tabs className="mb-2" defaultValue="weeks">
