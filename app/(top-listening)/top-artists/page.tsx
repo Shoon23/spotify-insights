@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { FilterMenu } from "@/components/TopListening/FilterMenu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -6,112 +7,76 @@ import Link from "next/link";
 import { ArtistCard } from "@/components/TopListening/ArtistCard";
 import { useGenresStore } from "@/store/genresStore";
 import getSortedGenreCount from "@/utils/getSortedGenreCount";
-const getTopArtistWeeks = async (accessToken: string) => {
-  try {
-    const res = await fetch(
-      "https://api.spotify.com/v1/me/top/artists?limit=50&offset=0&time_range=short_term",
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-const getTopArtistMonths = async (accessToken: string) => {
-  try {
-    const res = await fetch(
-      "https://api.spotify.com/v1/me/top/artists?limit=50&offset=0&time_range=medium_term",
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-const getTopArtistYears = async (accessToken: string) => {
-  try {
-    const res = await fetch(
-      "https://api.spotify.com/v1/me/top/artists?limit=50&offset=0&time_range=long_term",
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-export default async function TopArtistsPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  const topArtistWeeks = await getTopArtistWeeks(
-    "BQABtqB1ggsCxj6WChRIcRWonxXimV4qwnNzLjsnytDUxee_ZZX6H8c1K90Dzb8EXnE-aSNui0Z9SxIivjVXEQDhphWrVEKCeZ2jHzYq_wZJNRyA9cArnz9ubSxERLIC6NXi9qbJSFhFOhYP12G2YoozZlrFEndLiQ3q8Nlx5cRO9CBKFlPYeStSj2P2BiV0EwARUIKrB7mtZ2QrizYE9Po"
-  );
-  const topArtistMonths = await getTopArtistMonths(
-    "BQABtqB1ggsCxj6WChRIcRWonxXimV4qwnNzLjsnytDUxee_ZZX6H8c1K90Dzb8EXnE-aSNui0Z9SxIivjVXEQDhphWrVEKCeZ2jHzYq_wZJNRyA9cArnz9ubSxERLIC6NXi9qbJSFhFOhYP12G2YoozZlrFEndLiQ3q8Nlx5cRO9CBKFlPYeStSj2P2BiV0EwARUIKrB7mtZ2QrizYE9Po"
-  );
-  const topArtistYears = await getTopArtistYears(
-    "BQABtqB1ggsCxj6WChRIcRWonxXimV4qwnNzLjsnytDUxee_ZZX6H8c1K90Dzb8EXnE-aSNui0Z9SxIivjVXEQDhphWrVEKCeZ2jHzYq_wZJNRyA9cArnz9ubSxERLIC6NXi9qbJSFhFOhYP12G2YoozZlrFEndLiQ3q8Nlx5cRO9CBKFlPYeStSj2P2BiV0EwARUIKrB7mtZ2QrizYE9Po"
-  );
-  const sortedWeeksGenre = getSortedGenreCount(topArtistWeeks);
-  const sortedMonthsGenre = getSortedGenreCount(topArtistMonths);
-  const sortedYearsGenre = getSortedGenreCount(topArtistYears);
+import { Button } from "@/components/ui/button";
+import WeekList from "@/components/TopArtists/WeekList";
+import MonthList from "@/components/TopArtists/MonthList";
+import YearList from "@/components/TopArtists/YearList";
+import { useSearchParams } from "next/navigation";
+export default function TopArtistsPage() {
+  const genresStore = useGenresStore();
+  const fetchArtistWeeks = useGenresStore((state) => state.fetchArtistWeeks);
+  const fetchArtistMonths = useGenresStore((state) => state.fetchArtistMonths);
+  const fetchArtistYears = useGenresStore((state) => state.fetchArtistYears);
 
-  useGenresStore.setState({
-    topGenresWeeks: sortedWeeksGenre,
-    topGenresMonths: sortedMonthsGenre,
-    topGenresYears: sortedYearsGenre,
-  });
+  const searchParams = useSearchParams();
+
+  const code = searchParams.get("code") as string;
+
+  useEffect(() => {
+    const getToken = async (code: string) => {
+      try {
+        const res = await fetch("http://localhost:3000/api/auth?code=" + code, {
+          method: "GET",
+
+          cache: "no-store",
+        });
+        const data = await res.json();
+
+        console.log(data);
+        // router.push(`/top-artists?access_token${data.access_token}`);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    // getToken(code);
+  }, []);
+
+  const renderContent = () => {
+    if (selectedFilter === "weeks") {
+      return <WeekList getData={fetchArtistWeeks} />;
+    } else if (selectedFilter === "months") {
+      return <MonthList getData={fetchArtistMonths} />;
+    } else if (selectedFilter === "years") {
+      return <YearList getData={fetchArtistYears} />;
+    }
+  };
+  const [selectedFilter, setSelectedFilter] = useState<
+    "weeks" | "months" | "years"
+  >("weeks");
 
   return (
-    <Tabs className="mb-2" defaultValue="weeks">
-      <TabsList>
-        <TabsTrigger value="weeks">Last 4 weeks</TabsTrigger>
-
-        <TabsTrigger value="months">Last 6 months</TabsTrigger>
-
-        <TabsTrigger value="years">All time</TabsTrigger>
-      </TabsList>
-
-      <TabsContent value="weeks" className="p-2 rounded-lg bg-muted">
-        <ScrollArea className="h-[70vh]">
-          {topArtistWeeks.items.map((data: any, idx: number) => {
-            return <ArtistCard key={idx} rank={idx + 1} data={data} />;
-          })}
-        </ScrollArea>
-      </TabsContent>
-      <TabsContent value="months" className="p-2 rounded-lg bg-muted">
-        <ScrollArea className="h-[70vh]">
-          {topArtistMonths.items.map((data: any, idx: number) => {
-            return <ArtistCard key={idx} rank={idx + 1} data={data} />;
-          })}
-        </ScrollArea>
-      </TabsContent>
-      <TabsContent value="years" className="p-2 rounded-lg bg-muted">
-        <ScrollArea className="h-[70vh]">
-          {topArtistYears.items.map((data: any, idx: number) => {
-            return <ArtistCard key={idx} rank={idx + 1} data={data} />;
-          })}
-        </ScrollArea>
-      </TabsContent>
-    </Tabs>
+    <>
+      <nav>
+        <Button
+          variant={selectedFilter === "weeks" ? "secondary" : "outline"}
+          onClick={() => setSelectedFilter("weeks")}
+        >
+          Weeks
+        </Button>
+        <Button
+          variant={selectedFilter === "months" ? "secondary" : "outline"}
+          onClick={() => setSelectedFilter("months")}
+        >
+          Months
+        </Button>
+        <Button
+          variant={selectedFilter === "years" ? "secondary" : "outline"}
+          onClick={() => setSelectedFilter("years")}
+        >
+          Years
+        </Button>
+      </nav>
+      <div className="">{renderContent()}</div>
+    </>
   );
 }

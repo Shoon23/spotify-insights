@@ -4,6 +4,7 @@ import { FilterMenu } from "@/components/TopListening/FilterMenu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export default function TopListeningLayout({
   children,
@@ -11,33 +12,40 @@ export default function TopListeningLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const filter = searchParams?.get("filter") as string;
 
   return (
     <section className="col-span-4 ">
       {/* tops options */}
-      <Tabs className="w-full mb-2" defaultValue="artists">
-        <TabsList className="flex">
-          <Link className="w-full" href={"/top-artists"}>
-            <TabsTrigger className="w-full" value="artists">
-              Artists
-            </TabsTrigger>
-          </Link>
-          <Link className="w-full" href={"/top-tracks"}>
-            <TabsTrigger className="w-full" value="tracks">
-              Tracks
-            </TabsTrigger>
-          </Link>
-
-          <Link className="w-full" href={"/top-genres"}>
-            <TabsTrigger className="w-full" value="genre">
-              Genre
-            </TabsTrigger>
-          </Link>
-        </TabsList>
-      </Tabs>
+      <nav className="w-full flex mb-2">
+        <Link className="w-full" href={"/top-artists"}>
+          <Button
+            className="w-full"
+            variant={
+              pathname === "/top-artists" || pathname === "/"
+                ? "secondary"
+                : "outline"
+            }
+          >
+            Artists
+          </Button>
+        </Link>
+        <Link className="w-full" href={"/top-tracks"}>
+          <Button
+            className="w-full"
+            variant={pathname === "/top-tracks" ? "secondary" : "outline"}
+          >
+            Tracks
+          </Button>
+        </Link>
+        <Link className="w-full" href={"/top-genres"}>
+          <Button
+            className="w-full"
+            variant={pathname === "/top-genres" ? "secondary" : "outline"}
+          >
+            Genre
+          </Button>
+        </Link>
+      </nav>
 
       {children}
     </section>
