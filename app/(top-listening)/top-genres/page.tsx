@@ -64,4 +64,43 @@ export default function TopGenresPage() {
   //     </TabsContent>
   //   </Tabs>
   // );
+
+  const renderContent = () => {
+    if (selectedFilter === "weeks") {
+      return <WeekList getData={fetchSpotifyTops} />;
+    } else if (selectedFilter === "months") {
+      return <MonthList getData={fetchSpotifyTops} />;
+    } else if (selectedFilter === "years") {
+      return <YearList getData={fetchSpotifyTops} />;
+    }
+  };
+  const [selectedFilter, setSelectedFilter] = useState<
+    "weeks" | "months" | "years"
+  >("weeks");
+
+  return (
+    <>
+      <nav>
+        <Button
+          variant={selectedFilter === "weeks" ? "secondary" : "outline"}
+          onClick={() => setSelectedFilter("weeks")}
+        >
+          Weeks
+        </Button>
+        <Button
+          variant={selectedFilter === "months" ? "secondary" : "outline"}
+          onClick={() => setSelectedFilter("months")}
+        >
+          Months
+        </Button>
+        <Button
+          variant={selectedFilter === "years" ? "secondary" : "outline"}
+          onClick={() => setSelectedFilter("years")}
+        >
+          Years
+        </Button>
+      </nav>
+      <div className="">{renderContent()}</div>
+    </>
+  );
 }
