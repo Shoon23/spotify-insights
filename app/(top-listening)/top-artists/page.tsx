@@ -1,23 +1,44 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { FilterMenu } from "@/components/TopListening/FilterMenu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import Link from "next/link";
-import { ArtistCard } from "@/components/TopListening/ArtistCard";
-import { useGenresStore } from "@/store/genresStore";
-import getSortedGenreCount from "@/utils/getSortedGenreCount";
+import {
+  iGenreStoreState,
+  iTopGenre,
+  useGenresStore,
+} from "@/store/genresStore";
 import { Button } from "@/components/ui/button";
-import WeekList from "@/components/TopArtists/WeekList";
-import MonthList from "@/components/TopArtists/MonthList";
-import YearList from "@/components/TopArtists/YearList";
 import { useSearchParams } from "next/navigation";
-export default function TopArtistsPage() {
-  const genresStore = useGenresStore();
-  const fetchArtistWeeks = useGenresStore((state) => state.fetchArtistWeeks);
-  const fetchArtistMonths = useGenresStore((state) => state.fetchArtistMonths);
-  const fetchArtistYears = useGenresStore((state) => state.fetchArtistYears);
+import isObjectEmpty from "@/utils/isObjectEmpty";
+import { iArtistStoreState, useArtistStore } from "@/store/artistsStore";
+import { fetchSpotifyTops } from "@/service/spotifyService";
+import { Loader2 } from "lucide-react";
+import TopArtistList from "@/components/TopListening/TopArtistList";
 
+// fetch and set top artist and genre data
+export async function fetchAndSetArtistsData(
+  accessToken: string,
+  selectedFilter: "weeks" | "months" | "years",
+  artistStore: iArtistStoreState,
+  genreStore: iGenreStoreState
+) {
+  if (selectedFilter === "weeks" && isObjectEmpty(artistStore.topWeek)) {
+    const data = await fetchSpotifyTops(accessToken, "artists", "short_term");
+    artistStore.setTopWeek(data);
+    genreStore.setTopWeek(data);
+  } else if (
+    selectedFilter === "months" &&
+    isObjectEmpty(artistStore.topMonth)
+  ) {
+    const data = await fetchSpotifyTops(accessToken, "artists", "medium_term");
+    artistStore.setTopMonth(data);
+    genreStore.setTopMonth(data);
+  } else if (selectedFilter === "years" && isObjectEmpty(artistStore.topYear)) {
+    const data = await fetchSpotifyTops(accessToken, "artists", "long_term");
+    artistStore.setTopYear(data);
+    genreStore.setTopYear(data);
+  }
+}
+
+export default function TopArtistsPage() {
   const searchParams = useSearchParams();
 
   const code = searchParams.get("code") as string;
@@ -41,18 +62,68 @@ export default function TopArtistsPage() {
     // getToken(code);
   }, []);
 
-  const renderContent = () => {
-    if (selectedFilter === "weeks") {
-      return <WeekList getData={fetchArtistWeeks} />;
-    } else if (selectedFilter === "months") {
-      return <MonthList getData={fetchArtistMonths} />;
-    } else if (selectedFilter === "years") {
-      return <YearList getData={fetchArtistYears} />;
-    }
-  };
+  const accessToken =
+    "BQAUV_80dEcLFAPlusxITeP9421G1Nkp7yYpnRU0GfADih1-g11AvYs4Ufrvrbo6M-JZAU8kQMn2WS2sjJhuFMmyd0J305QuRCrI3IUSDmG7aOAi8zfU3hH8Y70LE5HT1EdLdKE_nR5iafODSBm3a19BXLm4Ake7k9PNH-yW5m-JJRBL_0Lb_YbvXFuz2CqXzyG-gSSU3sqg2jpIWNti8yA";
   const [selectedFilter, setSelectedFilter] = useState<
     "weeks" | "months" | "years"
   >("weeks");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const artistStore = useArtistStore();
+  const genreStore = useGenresStore();
+  useEffect(() => {
+    fetchArtistData();
+  }, [selectedFilter]);
+
+  // fetch the top artist with filter
+  const fetchArtistData = async () => {
+    setIsLoading(true);
+    setIsError(false);
+    try {
+      fetchAndSetArtistsData(
+        accessToken,
+        selectedFilter,
+        artistStore,
+        genreStore
+      );
+    } catch (error) {
+      console.log(error);
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // render the list of artists
+  const renderContent = () => {
+    let artistData;
+
+    if (selectedFilter === "weeks") {
+      artistData = artistStore.topWeek;
+    } else if (selectedFilter === "months") {
+      artistData = artistStore.topMonth;
+    } else if (selectedFilter === "years") {
+      artistData = artistStore.topYear;
+    }
+
+    if (isLoading) {
+      return (
+        <div className="flex justify-center items-center h-[70vh]">
+          <Loader2 className="mr-2 h-20 w-20 animate-spin" />
+        </div>
+      );
+    }
+
+    if (isError) {
+      return (
+        <div className="flex justify-center items-center h-[70vh]">
+          Something went wrong
+        </div>
+      );
+    }
+
+    return <TopArtistList artist={artistData} />;
+  };
 
   return (
     <>
@@ -76,7 +147,7 @@ export default function TopArtistsPage() {
           Years
         </Button>
       </nav>
-      <div className="">{renderContent()}</div>
+      {renderContent()}
     </>
   );
 }

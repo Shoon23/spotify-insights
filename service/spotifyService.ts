@@ -1,7 +1,7 @@
 const fetchSpotifyTops = async (
   accessToken: string,
   type: "artists" | "tracks",
-  timeRange: string
+  timeRange: "short_term" | "medium_term" | "long_term"
 ) => {
   try {
     const res = await fetch(
@@ -13,6 +13,7 @@ const fetchSpotifyTops = async (
         },
       }
     );
+    console.log(`fetching as ${type} from spotify`);
     return await res.json();
   } catch (error) {
     console.error(

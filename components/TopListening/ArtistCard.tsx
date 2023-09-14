@@ -2,9 +2,10 @@ import React from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import Image from "next/image";
+import { iTopArtist } from "@/store/artistsStore";
 
 interface ArtistCardProps {
-  data: any;
+  data: iTopArtist;
   rank: number;
 }
 export const ArtistCard = ({ data, rank }: ArtistCardProps) => {

@@ -10,6 +10,13 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname();
 
+  const topListeningSubPage = [
+    "/",
+    "/top-artists",
+    "/top-genres",
+    "/top-tracks",
+  ];
+
   return (
     <div className={cn("pb-12", className)}>
       <div className="space-y-4 py-4">
@@ -17,7 +24,9 @@ export function Sidebar({ className }: SidebarProps) {
           <div className="space-y-1">
             <Link href={"/"}>
               <Button
-                variant={pathname === "/" ? "secondary" : "ghost"}
+                variant={
+                  topListeningSubPage.includes(pathname) ? "secondary" : "ghost"
+                }
                 className="w-full justify-start"
               >
                 Top Listening

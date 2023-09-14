@@ -1,82 +1,77 @@
 "use client";
 
-import { GenreCard } from "@/components/TopListening/GenreCard";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import TopGenreList from "@/components/TopListening/TopGenreList";
+import { Button } from "@/components/ui/button";
 import { useGenresStore } from "@/store/genresStore";
-import React from "react";
+import { Loader2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { fetchAndSetArtistsData } from "../top-artists/page";
+import { useArtistStore } from "@/store/artistsStore";
 
 export default function TopGenresPage() {
-  // const topGenreWeeks = useGenresStore((state) => state.topGenresWeeks);
-  // const topGenresMonths = useGenresStore((state) => state.topGenresMonths);
-  // const topGenresYears = useGenresStore((state) => state.topGenresYears);
-  // return (
-  //   <Tabs className="mb-2" defaultValue="weeks">
-  //     <TabsList>
-  //       <TabsTrigger value="weeks">Last 4 weeks</TabsTrigger>
-  //       <TabsTrigger value="months">Last 6 months</TabsTrigger>
-  //       <TabsTrigger value="years">All time</TabsTrigger>
-  //     </TabsList>
-  //     <TabsContent value="weeks" className="p-2 rounded-lg bg-muted">
-  //       <ScrollArea className="h-[70vh]">
-  //         {Object.entries(topGenreWeeks).map(
-  //           ([genre, data]: any, idx: number) => {
-  //             return (
-  //               <GenreCard
-  //                 key={idx}
-  //                 rank={data.rank}
-  //                 data={{ genre: genre, count: data.count }}
-  //               />
-  //             );
-  //           }
-  //         )}
-  //       </ScrollArea>
-  //     </TabsContent>
-  //     <TabsContent value="months" className="p-2 rounded-lg bg-muted">
-  //       <ScrollArea className="h-[70vh]">
-  //         {Object.entries(topGenresMonths).map(
-  //           ([genre, data]: any, idx: number) => {
-  //             return (
-  //               <GenreCard
-  //                 key={idx}
-  //                 rank={data.rank}
-  //                 data={{ genre: genre, count: data.count }}
-  //               />
-  //             );
-  //           }
-  //         )}
-  //       </ScrollArea>
-  //     </TabsContent>
-  //     <TabsContent value="years" className="p-2 rounded-lg bg-muted">
-  //       <ScrollArea className="h-[70vh]">
-  //         {Object.entries(topGenresYears).map(
-  //           ([genre, data]: any, idx: number) => {
-  //             return (
-  //               <GenreCard
-  //                 key={idx}
-  //                 rank={data.rank}
-  //                 data={{ genre: genre, count: data.count }}
-  //               />
-  //             );
-  //           }
-  //         )}
-  //       </ScrollArea>
-  //     </TabsContent>
-  //   </Tabs>
-  // );
-
-  const renderContent = () => {
-    if (selectedFilter === "weeks") {
-      return <WeekList getData={fetchSpotifyTops} />;
-    } else if (selectedFilter === "months") {
-      return <MonthList getData={fetchSpotifyTops} />;
-    } else if (selectedFilter === "years") {
-      return <YearList getData={fetchSpotifyTops} />;
-    }
-  };
+  const genreStore = useGenresStore();
+  const artistStore = useArtistStore();
+  const accessToken =
+    "BQAUV_80dEcLFAPlusxITeP9421G1Nkp7yYpnRU0GfADih1-g11AvYs4Ufrvrbo6M-JZAU8kQMn2WS2sjJhuFMmyd0J305QuRCrI3IUSDmG7aOAi8zfU3hH8Y70LE5HT1EdLdKE_nR5iafODSBm3a19BXLm4Ake7k9PNH-yW5m-JJRBL_0Lb_YbvXFuz2CqXzyG-gSSU3sqg2jpIWNti8yA";
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<
     "weeks" | "months" | "years"
   >("weeks");
+
+  useEffect(() => {
+    fetchArtistData();
+  }, [selectedFilter]);
+
+  // fetch data
+  const fetchArtistData = async () => {
+    setIsLoading(true);
+    setIsError(false);
+    try {
+      fetchAndSetArtistsData(
+        accessToken,
+        selectedFilter,
+        artistStore,
+        genreStore
+      );
+    } catch (error) {
+      console.log(error);
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // render genre data
+  const renderContent = () => {
+    let genreData;
+
+    if (selectedFilter === "weeks") {
+      genreData = genreStore.topWeek;
+    } else if (selectedFilter === "months") {
+      genreData = genreStore.topMonth;
+    } else if (selectedFilter === "years") {
+      genreData = genreStore.topYear;
+    }
+
+    if (isLoading) {
+      return (
+        <div className="flex justify-center items-center h-[70vh]">
+          <Loader2 className="mr-2 h-20 w-20 animate-spin" />
+        </div>
+      );
+    }
+
+    if (isError) {
+      return (
+        <div className="flex justify-center items-center h-[70vh]">
+          Something went wrong
+        </div>
+      );
+    }
+
+    return <TopGenreList genres={genreData} />;
+  };
 
   return (
     <>
@@ -100,7 +95,7 @@ export default function TopGenresPage() {
           Years
         </Button>
       </nav>
-      <div className="">{renderContent()}</div>
+      {renderContent()}
     </>
   );
 }

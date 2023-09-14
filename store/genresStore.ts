@@ -1,64 +1,30 @@
 import { create } from "zustand";
 import getSortedGenreCount from "@/utils/getSortedGenreCount";
-import { fetchSpotifyTops } from "@/service/spotifyService";
-interface TopGenresState {
-  topGenresYears: {
-    [key: string]: {
-      count: number;
-      rank: number;
-    };
+import { iTopArtist } from "./artistsStore";
+export interface iTopGenre {
+  [key: string]: {
+    count: number;
+    rank: number;
   };
-  topGenresWeeks: {
-    [key: string]: {
-      count: number;
-      rank: number;
-    };
-  };
-  topGenresMonths: {
-    [key: string]: {
-      count: number;
-      rank: number;
-    };
-  };
-  fetchArtistYears: (accessToken: string) => Promise<any>;
-  fetchArtistWeeks: (accessToken: string) => Promise<any>;
-  fetchArtistMonths: (accessToken: string) => Promise<any>;
 }
 
-export const useGenresStore = create<TopGenresState>()((set) => ({
-  topGenresYears: {},
-  topGenresWeeks: {},
-  topGenresMonths: {},
-  fetchArtistWeeks: async (accessToken: string) => {
-    try {
-      const data = await fetchSpotifyTops(accessToken, "artists", "short_term");
-      set({ topGenresWeeks: getSortedGenreCount(data) });
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
-  },
-  fetchArtistMonths: async (accessToken: string) => {
-    try {
-      const data = await fetchSpotifyTops(
-        accessToken,
-        "artists",
-        "medium_term"
-      );
-      set({ topGenresMonths: getSortedGenreCount(data) });
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
-  },
-  fetchArtistYears: async (accessToken: string) => {
-    try {
-      const data = await fetchSpotifyTops(accessToken, "artists", "long_term");
-      set({ topGenresYears: getSortedGenreCount(data) });
+export interface iGenreStoreState {
+  topWeek: iTopGenre;
+  topMonth: iTopGenre;
+  topYear: iTopGenre;
+  setTopWeek: (topWeek: { items: Array<iTopArtist> }) => void;
+  setTopMonth: (topMonth: { items: Array<iTopArtist> }) => void;
+  setTopYear: (topYear: { items: Array<iTopArtist> }) => void;
+}
 
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
-  },
+export const useGenresStore = create<iGenreStoreState>()((set) => ({
+  topWeek: {},
+  topMonth: {},
+  topYear: {},
+  setTopWeek: (topWeek: { items: Array<iTopArtist> }) =>
+    set(() => ({ topWeek: getSortedGenreCount(topWeek) })),
+  setTopMonth: (topMonth: { items: Array<iTopArtist> }) =>
+    set(() => ({ topMonth: getSortedGenreCount(topMonth) })),
+  setTopYear: (topYear: { items: Array<iTopArtist> }) =>
+    set(() => ({ topYear: getSortedGenreCount(topYear) })),
 }));
